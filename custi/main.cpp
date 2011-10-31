@@ -1,9 +1,11 @@
 // a[i][j]=latura maxima a submatricii (1,1)-(i,j)
 #include<cstdio>
 
-const int N=1003;
+const int N = 1003;
 
 int n, fr[N], s[N];
+
+char ss[N*3];
 
 short int sus[N][N], st[N][N], a[N][N];
 
@@ -17,18 +19,22 @@ void init() {
 }
 
 void citire() {
-	scanf("%d", &n);
+	scanf("%d\n", &n);
 
-    short int x;
+    int nr;
 
-	for (int i = 1;i <= n; ++i)
-		for (int j = 1;j <= n; ++j) {
-			scanf("%hd", &x);
+	for (int i = 1; i <= n; ++i)	{
+	    nr=0;
 
-			if (x)
-                mat[i][j] = true;
+        gets(ss);
+
+        for (int j = 0; ss[j]; j+=2) {
+            ++nr;
+
+            if (ss[j] == '1')
+                mat[i][nr] = true;
         }
-
+	}
 	init();
 }
 
