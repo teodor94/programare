@@ -5,11 +5,11 @@ using namespace std;
 
 const int N = 100005;
 
-int n, m, nivel[N], nivelmin[N], urm[N], nr;
+int n, m, nr, nivel[N], nivelmin[N], biconex, muchiex[N], muchiey[N];
 
 vector <int> v[N], mat[N];
 
-bool marcat[N], afisare;
+bool marcat[N];
 
 void citire() {
     scanf("%d%d", &n, &m);
@@ -25,63 +25,41 @@ void citire() {
 
 }
 
-void dfs(int nod, int pred) {
+void dfs(int nod) {
     marcat[nod] = true;
+    nivelmin[nod] = nivel[nod];
 
-    bool gasit = false;
+    for (vector <int>::iterator it = v[nod].begin(); it != v[nod].end(); ++it)
+        if (!marcat[*it]) {
+            nivel[*it] = nivel[nod] + 1;
 
-    for (int i = 0; i < (int)v[nod].size(); ++i)
-        if (!marcat[v[nod][i]]) {
-            nivel[v[nod][i]] = nivel[nod] + 1;
+            muchiex[++nr] = nod;
+            muchiey[nr] = *it;
 
-            urm[nod] = v[nod][i];
+            dfs(*it);
 
-            gasit = true;
+            if (nivelmin[*it] >= nivel[nod]) {
+                ++biconex;
 
-            dfs(v[nod][i], nod);
+                while (muchiex[nr] != nod || muchiey[nr] != *it)
+                    mat[biconex].push_back(muchiey[nr--]);
+
+                mat[biconex].push_back(nod);
+                mat[biconex].push_back(*it);
+                --nr;
+            }
+
+            nivelmin[nod] = min(nivelmin[nod], nivelmin[*it]);
         }
-    if (!gasit) {
-        nivelmin[nod] = nivel[nod];
-
-        for (int i = 0; i < (int)v[nod].size(); ++i)
-            if (v[nod][i] != pred)
-                nivelmin[nod] = min(nivelmin[nod], nivel[v[nod][i]]);
-    }
-    if (gasit) {
-        nivelmin[nod] = min(nivel[nod], nivelmin[urm[nod]]);
-        for (int i = 0; i < (int)v[nod].size(); ++i)
-            if (v[nod][i] != pred)
-                nivelmin[nod] = min(nivelmin[nod], nivel[v[nod][i]]);
-    }
+        else
+            nivelmin[nod] = min(nivelmin[nod], nivel[*it]);
 }
 
-void afis(int nod) {
-    marcat[nod] = true;
-
-    if (!afisare && nivelmin[nod] >= nivel[nod]) {
-        mat[++nr].push_back(nod);
-
-        afisare = true;
-
-        for (int i = 0; i < (int)v[nod].size(); ++i)
-            if (!marcat[v[nod][i]])
-                afis(v[nod][i]);
-
-        afisare = false;
-    }
-    else
-    if (afisare) {
-        mat[nr].push_back(nod);
-
-        for (int i = 0; i < (int)v[nod].size(); ++i)
-            if (!marcat[v[nod][i]])
-                afis(v[nod][i]);
-    }
-    else {
-        for (int i = 0; i < (int)v[nod].size(); ++i)
-            if (!marcat[v[nod][i]])
-                afis(v[nod][i]);
-    }
+void afisare() {
+    printf("%d\n", biconex);
+    for (int i = 1; i <= biconex; ++i, printf("\n"))
+        for (vector <int>::iterator it = mat[i].begin(); it != mat[i].end(); ++it)
+            printf("%d ", *it);
 }
 
 int main() {
@@ -90,27 +68,9 @@ int main() {
 
     citire();
 
-    nivel[1] = 1;
+    dfs(1);
 
-    dfs(1,0);
+    afisare();
 
-    nivelmin[1] = 0;
-
-    for (int i = 0; i < N; ++i)
-        marcat[i] = false;
-
-    //for (int i = 1; i <= n; ++i,printf("\n"))
-    //    printf("%d %d", nivel[i], nivelmin[i]);
-    //printf("\n");
-
-    afisare = false;
-
-    afis(1);
-
-    printf("%d\n", nr);
-
-    for (int i = 1; i <= nr; ++i,printf("\n"))
-        for (int j = 0; j < (int)mat[i].size(); ++j)
-            printf("%d ", mat[i][j]);
     return 0;
 }
