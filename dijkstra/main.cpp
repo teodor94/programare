@@ -8,17 +8,52 @@ using namespace std;
 const int N = 50005;
 
 int n, m, l[N];
+char s[30];
 vector<pair<int, int> > v[N];
 priority_queue<pair<int, int> > heap;
+
+void parsare(char ss[], int &x, int &y, int &c) {
+    x = 0;
+    y = 0;
+    c = 0;
+
+    int i = 0;
+
+    while (ss[i] != ' ') {
+        x = x * 10 + (ss[i] - '0');
+        ++i;
+    }
+
+    ++i;
+    while (ss[i] != ' ') {
+        y = y * 10 + (ss[i] - '0');
+        ++i;
+    }
+
+    ++i;
+    while (ss[i] && ss[i] != ' ' && ss[i] != '\n') {
+        c = c * 10 + (ss[i] - '0');
+        ++i;
+    }
+}
+
+void init(char ss[]) {
+    for (int i = 0; ss[i]; ++i)
+        ss[i] = 0;
+}
 
 void citire() {
     freopen("dijkstra.in", "r", stdin);
     freopen("dijkstra.out", "w", stdout);
 
-    scanf("%d%d", &n, &m);
+    scanf("%d%d\n", &n, &m);
     int c, x, y;
     for (int i = 1; i <= m; ++i) {
-        scanf("%d%d%d", &x, &y, &c);
+        gets(s);
+
+        parsare(s, x, y, c);
+
+        init(s);
 
         v[x].push_back(make_pair(c, y));
     }
