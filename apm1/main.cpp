@@ -11,15 +11,59 @@ const int N = 200005;
 
 int n, m, lg, heap[N], nodd[N], nr, r[N][2], total, prec[N];
 bool fr[N];
+char s[50];
 vector <int> v[N], cost[N];
 
+void parsare(char ss[], int &x, int &y, int &c) {
+    x = 0;
+    y = 0;
+    c = 0;
+
+    int i = 0;
+
+    while (ss[i] != ' ') {
+        x = x * 10 + (ss[i] - '0');
+        ++i;
+    }
+
+    ++i;
+    while (ss[i] != ' ') {
+        y = y * 10 + (ss[i] - '0');
+        ++i;
+    }
+
+    ++i;
+
+    int inmultit = 1;
+
+    if (ss[i] == '-') {
+        inmultit = - 1;
+        ++i;
+    }
+
+    while (ss[i] && ss[i] != ' ' && ss[i] != '\n') {
+        c = c * 10 + (ss[i] - '0');
+        ++i;
+    }
+    c *= inmultit;
+}
+
+void init(char ss[]) {
+    for (int i = 0; ss[i]; ++i)
+        ss[i] = 0;
+}
 
 void citire() {
-    scanf("%d%d", &n, &m);
+    scanf("%d%d\n", &n, &m);
 
     int x, y, c;
     for (int i = 1; i <= m; ++i) {
-        scanf("%d%d%d", &x, &y, &c);
+        gets(s);
+
+        parsare(s, x, y, c);
+
+        init(s);
+
         v[x].push_back(y);
         cost[x].push_back(c);
         v[y].push_back(x);
